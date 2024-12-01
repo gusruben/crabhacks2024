@@ -7,6 +7,9 @@
     let evaluations = ["A", "B", "B", "C", "A"];
     let analysisResult = ''; // To store the AI analysis result
 
+    let video;
+    let canvas;
+
     export async function fileToBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -70,13 +73,38 @@
   });
         // testGetAnswers();
     })
+    const width = 320; // We will scale the photo width to this
+    let height = 0; // This will be computed based on the input stream
+
+    function takePicture() {
+        const context = canvas.getContext("2d");
+        canvas.width = width;
+        canvas.height = height;
+        context.drawImage(video, 0, 0, width, height);
+
+        const data = canvas.toDataURL("image/png");
+    }
+    let streaming = false;
+    function canPlay() {
+        if (!streaming) {
+            height = (video.videoHeight / video.videoWidth) * width;
+
+            video.setAttribute("width", width);
+            video.setAttribute("height", height);
+            canvas.setAttribute("width", width);
+            canvas.setAttribute("height", height);
+            streaming = true;
+        }
+    }
 </script>
+
+<canvas bind:this={canvas} style="opacity: 0; pointer-events: none"></canvas>
 
 <!-- Webcam Placeholder -->
 <div id="webcam">
     <div id="webcam-wrapper">
         <!-- svelte-ignore a11y_media_has_caption -->
-        <video id="video" bind:this={video}></video>
+        <video id="video" bind:this={video} on:canplay={canPlay}></video>
     </div>
 </div>
 
