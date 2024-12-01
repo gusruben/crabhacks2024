@@ -58,7 +58,13 @@
         font-size: 0.9em;
     }
 
-    .nav-item.selected {
+    .nav-item.selected::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
         /*border: 2px solid transparent; /* For gradient border */
         /*background: linear-gradient(
             rgba(120, 173, 243, 0.2),
