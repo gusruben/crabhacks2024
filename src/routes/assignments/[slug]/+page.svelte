@@ -29,6 +29,9 @@
 
 <div class="container">
     <header>
+        <a href="/assignments" id="back">
+            <Icon icon="mingcute:left-line" width="1em" height="1em" />
+        </a>
         <h1>{data.slug}</h1>
     </header>
     <main class="students">
@@ -37,7 +40,7 @@
                 <p>{student.name}</p>
                 <span>
                     <p>{student.grade}</p>
-                    <Icon class="icon" icon="mingcute:right-line" width="1em" height="1em" />
+                    <Icon icon="mingcute:right-line" width="1em" height="1em" />
                 </span>
             </div>
         {/each}
@@ -76,6 +79,12 @@
         display: flex;
         flex-direction: column;
         height: 100vh;
+    }
+
+    #back {
+        float: left;
+        font-size: 1.8rem;
+        color: white;
     }
 
     header {

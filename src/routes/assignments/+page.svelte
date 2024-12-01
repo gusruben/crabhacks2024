@@ -1,4 +1,5 @@
 <script>
+	import { goto } from "$app/navigation";
 	import NavBar from "$lib/NavBar.svelte";
     import Icon from "@iconify/svelte";
 
@@ -24,8 +25,10 @@
     </header>
 
     <main class="assignments">
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
         {#each assignments as assignment}
-            <div class="assignment-card">
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <div class="assignment-card" on:click={() => goto("/assignments/" + assignment.title)}>
                 <div class="assignment-info">
                     <h2>{assignment.title}</h2>
                     <p>{assignment.description}</p>
