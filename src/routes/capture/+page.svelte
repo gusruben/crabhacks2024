@@ -1,16 +1,79 @@
 <script>
     import Icon from '@iconify/svelte';
+    import { onMount } from 'svelte';
+    import { createAnthropic } from '@ai-sdk/anthropic';
+    import { generateText } from 'ai';
 
-    // Example answers for evaluation
     let evaluations = ["A", "B", "B", "C", "A"];
+    let analysisResult = ''; // To store the AI analysis result
+
+    export async function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
+
+    export async function sendRequest(file) {
+        console.log("begin analysis")
+        const fileBase64 = await fileToBase64(file);
+        console.log(fileBase64)
+        const response = await fetch('/answers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                fileBase64
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        console.log("analysis complete")
+        const result = await response.json();
+        console.log("AI Analysis Result:", result);
+        return result.analysis; // Return the result for display
+    }
+
+    /**
+     * Tests the getAnswers function with a static file.
+     */
+     async function testGetAnswers() {
+        try {
+            // Fetch the image from the static directory
+            const response = await fetch('/test_answers.png');
+            if (!response.ok) {
+                throw new Error('Failed to load test image.');
+            }
+            const blob = await response.blob();
+            // Create a File from the Blob
+            const testFile = new File([blob], "test_answers.png", { type: blob.type });
+            // Send the File
+            analysisResult = await sendRequest(testFile);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+    onMount(()  =>{
+        testGetAnswers();
+    })
 </script>
 
-<div id="webcam"></div>
+<!-- Webcam Placeholder -->
+<div id="webcam">
+    <!-- Webcam content can be integrated here -->
+</div>
 
+<!-- Camera Button -->
 <div id="cam-button">
     <Icon icon="mdi:camera" width="2em" height="2em" color="white" />
 </div>
 
+<!-- Evaluation Row -->
 <div id="evaluation-row">
     {#each evaluations as answer, i}
         <div class="evaluation-box" title={`Question ${i + 1}: ${answer}`}>
@@ -21,10 +84,18 @@
     {/each}
 </div>
 
+<!-- Display AI Analysis Result -->
+{#if analysisResult}
+    <div id="analysis-result">
+        <h2>AI Analysis:</h2>
+        <p>{analysisResult}</p>
+    </div>
+{/if}
+
 <style>
     #webcam {
         width: 90%;
-        height: 70%;
+        height: 80%;
         margin: 0 auto;
         border-radius: 5px;
         background-color: rgb(176, 176, 176);
@@ -42,13 +113,14 @@
         border-radius: 50%;
         background-image: linear-gradient(45deg, #78adf3, #4263af);
         position: absolute;
-        bottom: 2em;
+        bottom: 1rem;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
         align-items: center;
         justify-content: center;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
     }
 
     /* Evaluation row at the bottom */
@@ -101,7 +173,34 @@
         text-align: center;
     }
 
+    /* Analysis Result Styling */
+    #analysis-result {
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        background-color: white;
+        padding: 1em;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        max-height: 30%;
+        overflow-y: auto;
+    }
+
+    #analysis-result h2 {
+        margin-top: 0;
+        color: #4263af;
+    }
+
+    #analysis-result p {
+        white-space: pre-wrap; /* Preserve line breaks */
+    }
+
     :global(body) {
         background-color: lightgray;
+        margin: 0;
+        padding: 0;
+        font-family: 'Lexend', sans-serif;
     }
 </style>

@@ -21,7 +21,7 @@
 	"type": "module",
 	"dependencies": {
 		"@ai-sdk/anthropic": "^1.0.2",
-		"ai": "^4.0.9",
-		"@fontsource/lexend": "^5.1.1"
+		"@fontsource/lexend": "^5.1.1",
+		"ai": "^4.0.9"
 	}
 }

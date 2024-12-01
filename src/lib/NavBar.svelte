@@ -33,7 +33,7 @@
     .bottom-nav {
         display: flex;
         justify-content: space-around;
-        padding: 1rem 0;
+        padding: 0.6rem 0;
         position: fixed;
         bottom: 0;
         width: 100%;
