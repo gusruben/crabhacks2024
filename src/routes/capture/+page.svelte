@@ -59,13 +59,25 @@
         }
     }
     onMount(()  =>{
-        testGetAnswers();
+        navigator.mediaDevices
+            .getUserMedia({ video: true, audio: false })
+            .then((stream) => {
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch((err) => {
+                console.error(`An error occurred: ${err}`);
+  });
+        // testGetAnswers();
     })
 </script>
 
 <!-- Webcam Placeholder -->
 <div id="webcam">
-    <!-- Webcam content can be integrated here -->
+    <div id="webcam-wrapper">
+        <!-- svelte-ignore a11y_media_has_caption -->
+        <video id="video" bind:this={video}></video>
+    </div>
 </div>
 
 <!-- Camera Button -->
@@ -104,6 +116,19 @@
         top: 45%;
         left: 50%;
         transform: translate(-50%, -50%);
+    }
+    #webcam-wrapper {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+    #video {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        object-fit: cover;
     }
 
     #cam-button {
