@@ -19,9 +19,9 @@
         });
     }
 
-    export async function sendRequest(file) {
+    export async function sendRequest(fileBase64) {
         console.log("begin analysis")
-        const fileBase64 = await fileToBase64(file);
+        // const fileBase64 = await fileToBase64(file);
         console.log(fileBase64)
         const response = await fetch('/answers', {
             method: 'POST',
@@ -76,13 +76,17 @@
     const width = 320; // We will scale the photo width to this
     let height = 0; // This will be computed based on the input stream
 
-    function takePicture() {
+    async function takePicture() {
         const context = canvas.getContext("2d");
         canvas.width = width;
         canvas.height = height;
         context.drawImage(video, 0, 0, width, height);
 
         const data = canvas.toDataURL("image/png");
+        // console.log(data);
+        // const testFile = new File([data], "photo.png", { type: data.type });
+        // console.log(testFile);
+        analysisResult = await sendRequest(data);
     }
     let streaming = false;
     function canPlay() {
@@ -98,6 +102,7 @@
     }
 </script>
 
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <canvas bind:this={canvas} style="opacity: 0; pointer-events: none"></canvas>
 
 <!-- Webcam Placeholder -->
@@ -109,7 +114,9 @@
 </div>
 
 <!-- Camera Button -->
-<div id="cam-button">
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div id="cam-button" on:click={takePicture}>
     <Icon icon="mdi:camera" width="2em" height="2em" color="white" />
 </div>
 
