@@ -88,7 +88,7 @@
 {#if analysisResult}
     <div id="analysis-result">
         <h2>AI Analysis:</h2>
-        <p>{analysisResult}</p>
+        <p>{analysisResult}</p>odu
     </div>
 {/if}
 
@@ -98,8 +98,7 @@
         height: 80%;
         margin: 0 auto;
         border-radius: 5px;
-        background-color: rgb(176, 176, 176);
-        border: 1px solid red; /* Debugging aid */
+        background-color: #2C2E33;
         position: absolute;
         /* Centered */
         top: 45%;
@@ -111,17 +110,17 @@
         width: 4em;
         height: 4em;
         border-radius: 50%;
-        background-image: linear-gradient(45deg, #78adf3, #4263af);
+        background-image: linear-gradient(180deg, #3E70CD 0%, #1C53B8 100%);;
         position: absolute;
-        bottom: 1rem;
+        bottom: 2em;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        cursor: pointer;
+        box-shadow: 0px -3.556px 3.556px 0px rgba(15, 49, 112, 0.25) inset, 0px 3.556px 3.556px 0px rgba(149, 177, 229, 0.10) inset;
     }
+
 
     /* Evaluation row at the bottom */
     #evaluation-row {
@@ -198,7 +197,7 @@
     }
 
     :global(body) {
-        background-color: lightgray;
+        background-color: #232529;
         margin: 0;
         padding: 0;
         font-family: 'Lexend', sans-serif;
