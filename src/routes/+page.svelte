@@ -1,2 +1,12 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script>
+	import { onMount } from 'svelte';
+	import { goto } from "$app/navigation";
+
+    onMount(() => goto("/assignments"));
+</script>
+
+<style>
+    :global(body) {
+        background-color: #232529;
+    }
+</style>
