@@ -38,7 +38,7 @@
         {/each}
     </main>
 
-    <button class="floating-button"><Icon id="plus" icon="tabler:plus" width="1.6rem" height="1.6rem" color="white" /></button>
+    <button class="floating-button" on:click={() => goto("/capture")}><Icon id="plus" icon="tabler:plus" width="1.6rem" height="1.6rem" color="white" /></button>
     <NavBar selectedPage="Assignments"/>
 </div>
 

@@ -1,13 +1,14 @@
 <script>
 	import Icon from "@iconify/svelte";
+    import { goto } from "$app/navigation";
 
     
     export let selectedPage = "Assignments"; // Default selected page
 
     const navItems = [
-        { name: "Assignments", icon: "mingcute:document-2-fill" },
-        { name: "Students", icon: "mingcute:contacts-2-fill" },
-        { name: "Profile", icon: "iconamoon:profile-fill" }
+        { name: "Assignments", icon: "mingcute:document-2-fill", href: "/assignments" },
+        { name: "Students", icon: "mingcute:contacts-2-fill", href: "#" },
+        { name: "Profile", icon: "iconamoon:profile-fill", href: "/profile" }
     ];
 
     const selectPage = (page) => {
@@ -21,7 +22,7 @@
         <!-- svelte-ignore a11y_no_static_element_interactions -->
         <div
             class="nav-item {item.name === selectedPage ? 'selected' : ''}"
-            on:click={() => selectPage(item.name)}
+            on:click={() => {selectPage(item.name); goto(item.href)}}
         >
             <Icon class="icon" icon={item.icon} width="1.5em" height="1.5em" />
             <p>{item.name}</p>
