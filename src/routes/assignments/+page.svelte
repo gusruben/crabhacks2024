@@ -42,8 +42,7 @@
 <style>
     :global(body) {
         margin: 0;
-        font-family: Arial, sans-serif;
-        background-color: #121212;
+        background-color: #232529;
         color: #ffffff;
         overflow: hidden;
         /*disable zoom*/
@@ -59,13 +58,12 @@
     header {
         padding: 1em;
         text-align: center;
-        background: linear-gradient(180deg, #232529 73.22%, rgba(35, 37, 41, 0.00) 100%);
+        background: linear-gradient(180deg, #232529FF 73.22%, #23252915 100%);
     }
 
     h1 {
         margin: 0;
         font-size: 1.5em;
-        
     }
 
     .assignments {
@@ -129,5 +127,6 @@
         box-shadow: 0px -3.556px 3.556px 0px rgba(15, 49, 112, 0.25) inset, 0px 3.556px 3.556px 0px rgba(149, 177, 229, 0.10) inset;
         background-image: linear-gradient(-180deg, #3E70CD 0%,  #1C53B8 100%);
         filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.5));
+        
     }
 </style>

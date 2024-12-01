@@ -1,10 +1,13 @@
 <script>
+	import Icon from "@iconify/svelte";
+
+    
     export let selectedPage = "Assignments"; // Default selected page
 
     const navItems = [
-        { name: "Assignments", icon: "📄" },
-        { name: "Students", icon: "👤" },
-        { name: "Profile", icon: "⚙️" }
+        { name: "Assignments", icon: "mingcute:document-2-fill" },
+        { name: "Students", icon: "mingcute:contacts-2-fill" },
+        { name: "Profile", icon: "iconamoon:profile-fill" }
     ];
 
     const selectPage = (page) => {
@@ -18,7 +21,7 @@
             class="nav-item {item.name === selectedPage ? 'selected' : ''}"
             on:click={() => selectPage(item.name)}
         >
-            <span class="icon">{item.icon}</span>
+            <Icon class="icon" icon={item.icon} width="1.5em" height="1.5em" />
             <p>{item.name}</p>
         </div>
     {/each}
@@ -54,19 +57,21 @@
     }
 
     .nav-item.selected {
-        color: #78adf3; /* Highlighted text */
-        border: 2px solid transparent; /* For gradient border */
-        background: linear-gradient(
+        /*border: 2px solid transparent; /* For gradient border */
+        /*background: linear-gradient(
             rgba(120, 173, 243, 0.2),
             rgba(120, 173, 243, 1)
-        );
+        );*/
         -webkit-mask: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 1));
         mask: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 1));
-        border-image: linear-gradient(
+        /*border-image: linear-gradient(
             rgba(120, 173, 243, 0.2),
             rgba(120, 173, 243, 1)
-        );
+        );*/
         border-image-slice: 1;
+        border-radius: 16px;
+        border: 2px solid rgba(57, 149, 255, 0.70);
+        background: linear-gradient(0deg, rgba(57, 149, 255, 0.40) 0%, rgba(34, 90, 153, 0.00) 100%);
     }
 
 
