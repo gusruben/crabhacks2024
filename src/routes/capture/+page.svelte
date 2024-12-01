@@ -4,7 +4,7 @@
     import { createAnthropic } from '@ai-sdk/anthropic';
     import { generateText } from 'ai';
 
-    let evaluations = ["A", "B", "B", "C", "A"];
+    let evaluations = [];
     let analysisResult = ''; // To store the AI analysis result
 
     let video;
@@ -39,6 +39,7 @@
         console.log("analysis complete")
         const result = await response.json();
         console.log("AI Analysis Result:", result);
+
         return result.analysis; // Return the result for display
     }
 
@@ -87,6 +88,13 @@
         // const testFile = new File([data], "photo.png", { type: data.type });
         // console.log(testFile);
         analysisResult = await sendRequest(data);
+        // evaluations = analysisResult.split("\n")[-1]
+        evaluations = [
+            {letter: "C", correct: true},
+            {letter: "D", correct: true},
+            {letter: "C", correct: false},
+            {letter: "A", correct: true},
+        ]
     }
     let streaming = false;
     function canPlay() {
@@ -123,21 +131,27 @@
 <!-- Evaluation Row -->
 <div id="evaluation-row">
     {#each evaluations as answer, i}
-        <div class="evaluation-box" title={`Question ${i + 1}: ${answer}`}>
+        <div class={"evaluation-box " + (answer.correct ? "correct" : "wrong")} title={`Question ${i + 1}: ${answer.letter}`}>
             <!-- Circle with index -->
             <div class="index-circle">{i + 1}</div>
-            <span class="box-content">{answer}</span>
+            <span class="box-content">{answer.letter}</span>
         </div>
     {/each}
 </div>
 
+{#if evaluations.length}
+<p class="score">3/4</p>
+{/if}
+
+<h1 style="position: absolute; top: 0.5rem; width: 100%; text-align: center; color: white">Scan an Assignment</h1>
+
 <!-- Display AI Analysis Result -->
-{#if analysisResult}
+<!-- {#if analysisResult}
     <div id="analysis-result">
         <h2>AI Analysis:</h2>
         <p>{analysisResult}</p>odu
     </div>
-{/if}
+{/if} -->
 
 <style>
     #webcam {
@@ -148,7 +162,7 @@
         background-color: #2C2E33;
         position: absolute;
         /* Centered */
-        top: 45%;
+        top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
     }
@@ -156,6 +170,8 @@
         width: 100%;
         height: 100%;
         position: relative;
+        overflow: hidden;
+        border-radius: 10px;
     }
     #video {
         position: absolute;
@@ -197,7 +213,7 @@
         position: relative; /* Position relative for index circle */
         width: 3em;
         height: 3em;
-        border-radius: 0.5em;
+        border-radius: 5px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -207,6 +223,25 @@
         text-transform: uppercase;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         background-color: rgb(200, 150, 150);
+    }
+    .evaluation-box.correct {
+        border: 2px solid #7BC891;
+        background-color: rgba(164, 226, 181, 0.60);
+        backdrop-filter: blur(10px);
+    }
+    .evaluation-box.wrong {
+        border: 2px solid #E97474;
+    background: rgba(233, 192, 183, 0.50);
+    backdrop-filter: blur(10px);
+    }
+
+    .score {
+        position: absolute;
+        bottom: 0.3em;
+        right: 1rem;
+        font-size: 2em;
+        color: white;
+        font: Lexend;
     }
 
     /* Small circle for index */

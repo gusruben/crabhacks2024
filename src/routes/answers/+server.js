@@ -18,13 +18,11 @@ export async function POST({ request }) {
     // Define the model
     const model = "claude-3-5-sonnet-20241022";
     const prompt = `Describe in explicit detail the given image. Describe the layout of the page. Then, describe the answers for each question, giving each option it's own paragraph. Then, note which answer the student selected for each question, but never write the letter, only what the sentence is, then that it's the third option / second option / etc. At the end, write the selected letters one after the other in this format (for example answers of ABCD):
-\`\`\`
 (first option) -> A
 (second option) -> B
 (third option) -> C
 (fourth option) -> D
 ABCD
-\`\`\`
 `
     // Create the AI request
     const response = await fetch('https://api.anthropic.com/v1/messages', {
