@@ -17,6 +17,8 @@
 
 <nav class="bottom-nav">
     {#each navItems as item}
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
         <div
             class="nav-item {item.name === selectedPage ? 'selected' : ''}"
             on:click={() => selectPage(item.name)}

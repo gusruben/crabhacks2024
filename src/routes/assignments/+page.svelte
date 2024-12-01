@@ -74,15 +74,14 @@
     }
 
     .assignment-card {
-        background-color: #1e1e1e;
+        background-color: #2C2E33;
         border-radius: 8px;
         padding: 1em;
         margin-bottom: 1em;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        border: 1px solid gray;
+        border: 1px solid #404249;
     }
 
     .assignment-info {
@@ -107,7 +106,7 @@
 
     .floating-button {
         position: fixed;
-        bottom: 6rem;
+        bottom: 8rem;
         right: 2rem;
         background-color: #4263af;
         color: #ffffff;
@@ -122,11 +121,11 @@
         align-items: center;
         justify-content: center;
         vertical-align: middle;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         cursor: pointer;
         box-shadow: 0px -3.556px 3.556px 0px rgba(15, 49, 112, 0.25) inset, 0px 3.556px 3.556px 0px rgba(149, 177, 229, 0.10) inset;
         background-image: linear-gradient(-180deg, #3E70CD 0%,  #1C53B8 100%);
-        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.5));
-        
+    }
+    .floating-button:active {
+        filter: brightness(1.2);
     }
 </style>
