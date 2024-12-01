@@ -59,6 +59,9 @@
         align-items: center;
         gap: 1em;
     }
+    .students {
+        overflow-y: auto;
+    }
 
     :global(body) {
         margin: 0;
@@ -84,31 +87,5 @@
     h1 {
         margin: 0;
         font-size: 1.5em;
-    }
-
-
-    .floating-button {
-        position: fixed;
-        bottom: 8rem;
-        right: 2rem;
-        background-color: #4263af;
-        color: #ffffff;
-        border: none;
-        border-radius: 50%;
-        width: 3.5rem;
-        height: 3.5rem;
-        margin: 0px;
-        padding: 0px;
-        font-size: 3em;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        vertical-align: middle;
-        cursor: pointer;
-        box-shadow: 0px -3.556px 3.556px 0px rgba(15, 49, 112, 0.25) inset, 0px 3.556px 3.556px 0px rgba(149, 177, 229, 0.10) inset;
-        background-image: linear-gradient(-180deg, #3E70CD 0%,  #1C53B8 100%);
-    }
-    .floating-button:active {
-        filter: brightness(1.2);
     }
 </style>
