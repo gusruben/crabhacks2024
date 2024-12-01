@@ -13,11 +13,27 @@
         <p>GR</p>
     </div>
 
-    <button class="color-button">Test</button>
+    <p class="info">Gus Ruben</p>
+    <p class="info email">gusruben@protonmail.com</p>
+
+    <button class="color-button">Update Email</button>
+    <button class="color-button">Change Password</button>
+    <button class="color-button">Delete Account</button>
     <NavBar selectedPage="Profile"/>
 </div>
 
 <style>
+
+    .info:first-of-type {
+        margin-top: 1.5em;
+    }
+    .info {
+        margin: 0 auto;
+        font-size: 1.2em;
+    }
+    .info.email {
+        opacity: 0.5;
+    }
 
     .pfp {
         width: 15em;
@@ -65,15 +81,21 @@
         border: none;
         border-radius: 0.2em;
         margin: 0px;
-        padding: 1em;
-        font-size: 3em;
+        padding: 0.5em 3em;
+        width: max-content;
         display: flex;
+        font-family: Lexend;
+        font-size: 1.2em;
         align-items: center;
         justify-content: center;
         vertical-align: middle;
         cursor: pointer;
         box-shadow: 0px -3.556px 3.556px 0px rgba(15, 49, 112, 0.25) inset, 0px 3.556px 3.556px 0px rgba(149, 177, 229, 0.10) inset;
         background-image: linear-gradient(-180deg, #3E70CD 0%,  #1C53B8 100%);
+        margin: 0.5em auto;
+    }
+    .color-button:first-of-type {
+        margin-top: 2em;
     }
     .color-button:active {
         filter: brightness(1.2);
