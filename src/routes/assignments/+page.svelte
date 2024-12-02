@@ -4,18 +4,18 @@
     import Icon from "@iconify/svelte";
 
     let assignments = [
-        { title: "Calculus 11.2 HW", description: "Graph the following Equations", dueDate: "11/23/24" },
+        { title: "Calculus 11.1 HW", description: "Graph the following Equations", dueDate: "11/23/24" },
         { title: "Calculus 11.2 HW", description: "Solve These Equations", dueDate: "11/23/24" },
-        { title: "Calculus 11.2 HW", description: "Prove this Equation", dueDate: "11/23/24" },
-        { title: "Calculus 11.2 HW", description: "Complete the MCQ", dueDate: "11/23/24" },
-        { title: "Calculus 11.2 HW", description: "Finish the FRQ", dueDate: "11/23/24" },
-        { title: "Calculus 11.2 HW", description: "Grade the FRQ and explain why it’s correct", dueDate: "11/23/24" },
+        { title: "Calculus 11.3 HW", description: "Prove this Equation", dueDate: "11/23/24" },
+        { title: "Calculus 11.4 HW", description: "Complete the MCQ", dueDate: "11/23/24" },
+        { title: "Calculus 11.5 HW", description: "Finish the FRQ", dueDate: "11/23/24" },
+        { title: "Calculus 12.1 HW", description: "Grade the FRQ and explain why it’s correct", dueDate: "11/23/24" },
         /*more assignments*/
-        {title: "Calculus 11.2 HW", description: "Graph the following Equations", dueDate: "11/23/24"},
-        {title: "Calculus 11.2 HW", description: "Solve These Equations", dueDate: "11/23/24"},
-        {title: "Calculus 11.2 HW", description: "Prove this Equation", dueDate: "11/23/24"},
-        {title: "Calculus 11.2 HW", description: "Complete the MCQ", dueDate: "11/23/24"},
-        {title: "Calculus 11.2 HW", description: "Finish the FRQ", dueDate: "11/23/24"},
+        {title: "Calculus 12.2 HW", description: "Graph the following Equations", dueDate: "11/23/24"},
+        {title: "Calculus 12.3 HW", description: "Solve These Equations", dueDate: "11/23/24"},
+        {title: "Calculus 12.4 HW", description: "Prove this Equation", dueDate: "11/23/24"},
+        {title: "Calculus 12.5 HW", description: "Complete the MCQ", dueDate: "11/23/24"},
+        {title: "Calculus 12.6 HW", description: "Finish the FRQ", dueDate: "11/23/24"},
     ];
 </script>
 

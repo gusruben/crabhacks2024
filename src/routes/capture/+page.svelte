@@ -9,6 +9,7 @@
 
     let video;
     let canvas;
+    let camDiv;
 
     export async function fileToBase64(file) {
         return new Promise((resolve, reject) => {
@@ -83,18 +84,17 @@
         canvas.height = height;
         context.drawImage(video, 0, 0, width, height);
 
+        camDiv.classList.add("rotate");
+
         const data = canvas.toDataURL("image/png");
         // console.log(data);
         // const testFile = new File([data], "photo.png", { type: data.type });
         // console.log(testFile);
         analysisResult = await sendRequest(data);
-        // evaluations = analysisResult.split("\n")[-1]
-        evaluations = [
-            {letter: "C", correct: true},
-            {letter: "D", correct: true},
-            {letter: "C", correct: false},
-            {letter: "A", correct: true},
-        ]
+        evaluations = analysisResult.split("\n")[-1].split("").map((letter, i) => {
+            return {letter, correct: letter === "A"};
+        });
+        camDiv.classList.remove("rotate")
     }
     let streaming = false;
     function canPlay() {
@@ -125,7 +125,9 @@
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div id="cam-button" on:click={takePicture}>
-    <Icon icon="mdi:camera" width="2em" height="2em" color="white" />
+    <div bind:this={camDiv}>
+        <Icon icon="mdi:camera" width="2em" height="2em" color="white" />
+    </div>
 </div>
 
 <!-- Evaluation Row -->
@@ -296,5 +298,18 @@
         margin: 0;
         padding: 0;
         font-family: 'Lexend', sans-serif;
+    }
+
+    @keyframes infinite-rotate {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .rotate {
+        animation: infinite-rotate 2s linear infinite;
     }
 </style>
