@@ -1,66 +1,29 @@
-import { createAnthropic } from '@ai-sdk/anthropic';
-import { generateText } from 'ai';
 import {VITE_ANTHROPIC_API_KEY} from '$env/static/private';
+import {VITE_GEMINI_API_KEY} from '$env/static/private';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const modelName = "gemini-1.5-flash"; //TODO figure out why experimental model isn't working
+const genAI = new GoogleGenerativeAI(VITE_GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: modelName });
 
 export async function POST({ request }) {
-    const { fileBase64 } = await request.json();
-    const apiKey = VITE_ANTHROPIC_API_KEY;
-
-    if (!apiKey) {
-        throw new Error("API_KEY is not set.");
-    }
-
-    // Initialize the Anthropics instance
-    const anthropic = createAnthropic({
-        apiKey: apiKey,
-    });
-
-    // Define the model
-    const model = "claude-3-5-sonnet-20241022";
-    const prompt = `Describe in explicit detail the given image. Describe the layout of the page. Then, describe the answers for each question, giving each option it's own paragraph. Then, note which answer the student selected for each question, but never write the letter, only what the sentence is, then that it's the third option / second option / etc. At the end, write the selected letters one after the other in this format (for example answers of ABCD):
-(first option) -> A
-(second option) -> B
-(third option) -> C
-(fourth option) -> D
-ABCD
-`
+    const { base64Image } = await request.json(); //TODO fix low image resolution
+    const PROMPT = "You have been given a picture of a student's answers to a multiple choice test. In order, state the letter that the student either bubbled in or circled for each question. Your answers should be separated by spaces and formatted as [question number]:[answer]. For example, if the student bubbled in 'A' for question 1 and 'B' for question 2, you should write '1:A 2:B'. If the student did not answer a question, or circled/bubbled more than one answer, write [question number]:?\nYour final output should be on the last line of your response. Do not include additional line breaks after your output.";
     // Create the AI request
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01'
+    const result = await model.generateContent([
+    {
+        inlineData: {
+            data: base64Image,
+            mimeType: "image/png",
         },
-        body: JSON.stringify({
-            model: model,
-            max_tokens: 1024,
-            messages: [
-                {
-                    role: "user",
-                    content: [
-                        {
-                            type: "image",
-                            source: {
-                                type: "base64",
-                                media_type: "image/png", // Adjust the media type as needed
-                                data: fileBase64.split(',')[1], // Remove the data URL prefix
-                            },
-                        },
-                        {
-                            type: "text",
-                            text: prompt
-                        }
-                    ]
-                    // content: "Hello there!"
-                }
-            ]
-        }),
-        temperature: 1.0
-    });
+    }, PROMPT
+    ]);
 
-    console.log("HERE!!!")
+    console.log("HERE!!!");
     // Check if response is valid
     // console.log(await response.json())
-    return new Response(JSON.stringify({ analysis: (await response.json()).content[0].text }), { status: 200 });
+
+    let text = await result.response.text();
+    console.log(text);
+    return new Response(JSON.stringify({ analysis: text}), { status: 200 });
 }

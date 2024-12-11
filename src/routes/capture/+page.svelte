@@ -1,15 +1,21 @@
 <script>
     import Icon from '@iconify/svelte';
     import { onMount } from 'svelte';
-    import { createAnthropic } from '@ai-sdk/anthropic';
-    import { generateText } from 'ai';
-
     let evaluations = [];
+    //create an answer key dictionary
+    let answerKey = [
+        {question: 5, answer: "C"},
+        {question: 6, answer: "D"},
+        {question: 7, answer: "C"},
+        {question: 8, answer: "A"},
+    ];
+    let score = 0;
     let analysisResult = ''; // To store the AI analysis result
 
     let video;
     let canvas;
     let camDiv;
+    let outerWebcamBox;
 
     export async function fileToBase64(file) {
         return new Promise((resolve, reject) => {
@@ -30,7 +36,7 @@
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                fileBase64
+                base64Image: fileBase64
             })
         });
 
@@ -75,38 +81,95 @@
   });
         // testGetAnswers();
     })
-    const width = 320; // We will scale the photo width to this
-    let height = 0; // This will be computed based on the input stream
+    let width = 0;
+    let height = 0;
+
+    function getBase64(canvas){
+        const data = canvas.toDataURL("image/png");
+        return data.split(",")[1];
+    }
 
     async function takePicture() {
         const context = canvas.getContext("2d");
         canvas.width = width;
         canvas.height = height;
         context.drawImage(video, 0, 0, width, height);
-
-        camDiv.classList.add("rotate");
-
-        const data = canvas.toDataURL("image/png");
-        // console.log(data);
-        // const testFile = new File([data], "photo.png", { type: data.type });
-        // console.log(testFile);
+        const data = getBase64(canvas);
         analysisResult = await sendRequest(data);
-        evaluations = analysisResult.split("\n")[-1].split("").map((letter, i) => {
-            return {letter, correct: letter === "A"};
-        });
-        camDiv.classList.remove("rotate")
+        let evaluationsLines = analysisResult.trimEnd().split("\n");
+        let evaluationsRaw = evaluationsLines[evaluationsLines.length - 1].split(" ");
+        updateEvaluations(evaluationsRaw);
     }
+
+    function updateEvaluations(evaluationsRaw){
+        let newEvaluations = [];
+        //check that each evaluation is a question in the answer key
+        //also check if it's already been evaluated; if so, simply overwrite it and alert the user
+        for (let i = 0; i < evaluationsRaw.length; i++) {
+            let evalThis = evaluationsRaw[i].split(":");
+            let questionNumber = parseInt(evalThis[0]);
+            let answer = evalThis[1];
+            if (evalThis[1] == "?") continue; //TODO: handle case of unknown answer
+            let foundInAnswerKey = false;
+            for (let j = 0; j < answerKey.length; j++) {
+                if (answerKey[j].question == questionNumber) {
+                    foundInAnswerKey = true;
+                    let alreadyEvaluated = false;
+                    if (evaluations.length > 0) {
+                        for (let k = 0; k < evaluations.length; k++) {
+                            if (evaluations[k].question == questionNumber) {
+                                evaluations[k].answer = answer;
+                                alert(`Question ${questionNumber} has been re-evaluated to ${answer}`);
+                                alreadyEvaluated = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!alreadyEvaluated) {
+                        newEvaluations.push({ answer: evalThis[1], question: evalThis[0] });
+                    }
+                    break;
+                }
+            }
+            if (!foundInAnswerKey) {
+                alert(`Question ${questionNumber} is not in the answer key`);
+            }
+        }
+        evaluations = [...evaluations, ...newEvaluations]; // Concatenate old and new evaluations
+        console.log('Evaluations:', evaluations);
+        console.log('Score:', score);
+        console.log('Answer Key Length:', answerKey.length);
+        score = getScore(); 
+    }
+
     let streaming = false;
     function canPlay() {
         if (!streaming) {
-            height = (video.videoHeight / video.videoWidth) * width;
-
+            width = video.videoWidth;
+            height = video.videoHeight;
             video.setAttribute("width", width);
             video.setAttribute("height", height);
+            //outerWebcamBox.style["height"] = 0.9 * (height/width) * 100 + "%";
             canvas.setAttribute("width", width);
             canvas.setAttribute("height", height);
             streaming = true;
         }
+    }
+
+    function isCorrect(index){
+        for(let i = 0; i < answerKey.length; i++){
+            if(answerKey[i].question == evaluations[index].question){
+                return answerKey[i].answer == evaluations[index].answer;
+            }
+        }
+    }
+
+    function getScore(){ //Returns the number of correct answers
+        let s = 0;
+        for(let i = 0; i < evaluations.length; i++){
+            if(isCorrect(i)) s++;
+        }
+        return s;
     }
 </script>
 
@@ -114,7 +177,7 @@
 <canvas bind:this={canvas} style="opacity: 0; pointer-events: none"></canvas>
 
 <!-- Webcam Placeholder -->
-<div id="webcam">
+<div id="webcam" bind:this={outerWebcamBox}>
     <div id="webcam-wrapper">
         <!-- svelte-ignore a11y_media_has_caption -->
         <video id="video" bind:this={video} on:canplay={canPlay}></video>
@@ -133,16 +196,16 @@
 <!-- Evaluation Row -->
 <div id="evaluation-row">
     {#each evaluations as answer, i}
-        <div class={"evaluation-box " + (answer.correct ? "correct" : "wrong")} title={`Question ${i + 1}: ${answer.letter}`}>
+        <div class={"evaluation-box " + (isCorrect(i) ? "correct" : "wrong")} title={`Question ${answer.question}: ${answer.answer}`}>
             <!-- Circle with index -->
-            <div class="index-circle">{i + 1}</div>
-            <span class="box-content">{answer.letter}</span>
+            <div class="index-circle">{answer.question}</div>
+            <span class="box-content">{answer.answer}</span>
         </div>
     {/each}
 </div>
 
 {#if evaluations.length}
-<p class="score">3/4</p>
+  <p class="score">Score: {score}/{answerKey.length}</p>
 {/if}
 
 <h1 style="position: absolute; top: 0.5rem; width: 100%; text-align: center; color: white">Scan an Assignment</h1>
@@ -181,7 +244,7 @@
         height: 100%;
         left: 0;
         top: 0;
-        object-fit: cover;
+        object-fit: contain;
     }
 
     #cam-button {
@@ -206,8 +269,11 @@
         gap: 0.5em;
         position: absolute;
         bottom: 6em;
+        padding-top: 3rem; /* Add some top padding */
+        padding-left: 0.5rem;
         left: 50%;
         transform: translateX(-50%);
+        overflow-x: scroll;
     }
 
     /* Individual evaluation boxes */
@@ -239,9 +305,9 @@
 
     .score {
         position: absolute;
-        bottom: 0.3em;
+        bottom: 0.3rem;
         right: 1rem;
-        font-size: 2em;
+        font-size: 1rem;
         color: white;
         font: Lexend;
     }
@@ -298,6 +364,8 @@
         margin: 0;
         padding: 0;
         font-family: 'Lexend', sans-serif;
+        touch-action: none;
+        overflow: hidden;
     }
 
     @keyframes infinite-rotate {
